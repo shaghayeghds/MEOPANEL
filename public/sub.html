@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>MEOPANEL · اشتراک من</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>⚡</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>💠</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
@@ -70,12 +70,12 @@ footer{text-align:center;color:var(--mu);font-size:12px;margin-top:34px}
 <div id="toast"></div>
 <script>
 const D=__DATA__;
-const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));
 const fa=n=>(+n).toLocaleString('fa-IR',{maximumFractionDigits:1});
 const fmt=b=>{b=+b||0;const u=['بایت','کیلوبایت','مگابایت','گیگابایت','ترابایت'];let i=0;while(b>=1024&&i<4){b/=1024;i++}return fa(+b.toFixed(i>1?2:0))+' '+u[i]};
 const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1700)};
 const copy=t=>{(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}).finally(()=>toast('کپی شد'))};
-const LOGO_EMOJI='⚡', LOGO_IMAGE='';
+const LOGO_EMOJI='💠', LOGO_IMAGE='';
 const CAT=`<span class="emj">${LOGO_IMAGE?`<img src="${LOGO_IMAGE}" alt="">`:LOGO_EMOJI}</span>`;
 const S={active:['فعال',0],disabled:['غیرفعال',1],expired:['منقضی شده',1],limit:['حجم تمام شده',1]}[D.status];
 const unl=!D.total,pc=unl?0:Math.min(100,D.used/D.total*100),left=unl?null:Math.max(0,D.total-D.used);
