@@ -1,0 +1,9 @@
+{
+  "name": "meopanel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MEOPANEL - multi-core proxy panel for Railway",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" }
+}
