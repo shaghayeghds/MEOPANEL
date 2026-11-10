@@ -19,7 +19,6 @@ button,input,select{font:inherit;color:inherit}
 svg.ic{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 aside{width:250px;flex:none;background:var(--sf);backdrop-filter:blur(18px);border-inline-end:1px solid var(--ln);padding:24px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
 .logo{display:flex;align-items:center;gap:12px;padding:0 8px 26px}
-
 .logo b{font-size:20px;font-weight:800;letter-spacing:1px;display:block;line-height:1.2}
 .logo small{color:var(--mu);font-size:11.5px}
 nav button{width:100%;display:flex;align-items:center;gap:12px;padding:11px 14px;border:0;background:none;border-radius:12px;color:var(--mu);cursor:pointer;text-align:start;transition:background .15s,color .15s}
@@ -191,7 +190,7 @@ nav button:hover .ne,nav button.on .ne{transform:scale(1.14)}
 </div>
 
 <aside>
-  <div class="logo"><span class="mk-slot"></span><div><b>MEOPANEL</b><small>مدیریت چندهسته‌ای</small></div></div>
+  <div class="logo"><span class="mk-slot"></span><div><b>MEOPANEL</b><small>مدیریت سرویس‌ها</small></div></div>
   <nav id="nav"></nav>
   <div class="sp"></div>
   <nav><button onclick="logout()"><span id="lo"></span>خروج</button></nav>
@@ -221,7 +220,7 @@ const EYE='<svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10
 $('#tg').innerHTML=EYE;
 function togglePw(){const i=$('#lp'),s=i.type==='password';i.type=s?'text':'password';$('#tg').innerHTML=s?EYE0:EYE}
 function caps(e){$('#caps').classList.toggle('on',!!(e.getModifierState&&e.getModifierState('CapsLock')))}
-const pages={dash:'داشبورد',users:'کاربران',inb:'اینباندها',cores:'هسته‌ها',set:'تنظیمات'};
+const pages={dash:'داشبورد',users:'کاربران',inb:'اینباندها',set:'تنظیمات'};
 let cur='dash',timer;
 const fmt=b=>{b=+b||0;const u=['B','KB','MB','GB','TB'];let i=0;while(b>=1024&&i<4){b/=1024;i++}return '<bdi dir="ltr">'+b.toFixed(i?2:0)+' '+u[i]+'</bdi>'};
 const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1900)};
@@ -241,8 +240,8 @@ function stagger(){let i=0;document.querySelectorAll('#main .bar,#main .grid>*,#
  document.querySelectorAll('#main tr').forEach((e,k)=>{e.style.setProperty('--i',Math.min(k,12)+3);e.classList.add('rise')})}
 function go(p){cur=p;clearInterval(timer);if(p!=='dash')dash.seen=0;
   $('#nav').innerHTML=Object.entries(pages).map(([k,v])=>`<button class="${k===p?'on':''}" onclick="go('${k}')"><span class="ne">${ico(k)}</span>${v}</button>`).join('');
-  const f={dash,users,inb,cores,set}[p];f().then(stagger).catch(()=>{});if(p==='dash'||p==='cores')timer=setInterval(()=>f().catch(()=>{}),6000)}
-const HI={'داشبورد':'dash','کاربران':'users','اینباندها':'inb','هسته‌ها':'cores','تنظیمات':'set'};
+  const f={dash,users,inb,set}[p];if(!f)return;f().then(stagger).catch(()=>{});if(p==='dash')timer=setInterval(()=>f().catch(()=>{}),6000)}
+const HI={'داشبورد':'dash','کاربران':'users','اینباندها':'inb','تنظیمات':'set'};
 const head=(t,s,a='')=>`<div class="bar"><div class="hd">${HI[t]?`<span class="pt">${ico(HI[t])}</span>`:''}<div><h1>${t}</h1><div class="sub">${s}</div></div></div>${a}</div>`;
 const st=s=>({running:['ok','در حال اجرا'],stopped:['wn','متوقف'],starting:['wn','در حال راه‌اندازی'],missing:['er','نصب نشده'],crashed:['er','خطا؛ تلاش مجدد'],error:['er','خطا']}[s]||['wn',s]);
 const pill=s=>{const [c,t]=st(s);return`<span class="pill ${c}">${t}</span>`};
@@ -254,8 +253,7 @@ async function dash(){const o=await api('GET','/overview'),pc=o.users?Math.round
  <div class="stat hero"><span class="deco">${DECO}</span><div style="position:relative"><div class="l">ترافیک مصرفی کاربران</div><div class="v" data-cu="bytes" data-v="${o.used}">${fmt(o.used)}</div><div class="mu">کل عبور از اینباندها: ${fmt(o.inboundBytes)}</div></div></div>
  <div class="stat"><div class="donut" id="dn" style="--p:${first?0:pc}"><i>${pc}٪</i></div><div><div class="v"><span data-cu="int" data-v="${o.active}">${o.active}</span><span class="mu"> از ${o.users}</span></div><div class="l">کاربر فعال</div></div></div>
  <div class="stat"><div class="bub">${ico('inb')}</div><div><div class="v" data-cu="int" data-v="${o.inbounds}">${o.inbounds}</div><div class="l">اینباند</div></div></div></div>
- <div class="two-col"><div class="card"><h3>وضعیت هسته‌ها</h3>${Object.entries(o.cores).map(([k,v])=>`<div class="core"><b>${cn(k)}</b>${pill(v)}</div>`).join('')}</div>
- <div class="card"><h3>آدرس پنل</h3><div class="lk"><span class="mono">https://${esc(o.host)}</span><button class="btn sm" data-t="https://${esc(o.host)}" onclick="cp(this)">کپی</button></div></div></div>`;
+ <div class="card"><h3>آدرس پنل</h3><div class="lk"><span class="mono">https://${esc(o.host)}</span><button class="btn sm" data-t="https://${esc(o.host)}" onclick="cp(this)">کپی</button></div></div>`;
  if(first){dash.seen=1;requestAnimationFrame(()=>requestAnimationFrame(()=>{const d=$('#dn');if(d)d.style.setProperty('--p',pc)}));
   document.querySelectorAll('[data-cu]').forEach(e=>{const v=+e.dataset.v;if(e.dataset.cu==='bytes')countUp(e,v,x=>fmt(x));else countUp(e,v,x=>Math.round(x))})}}
 
@@ -281,7 +279,7 @@ const rst=async id=>{await api('POST','/users/'+id+'/reset',{});toast('مصرف 
 const delU=async id=>{if(confirm('این کاربر حذف شود؟')){await api('DELETE','/users/'+id);users()}};
 async function showLinks(id){const d=await api('GET','/users/'+id+'/links');
  dlg(`<h2>کانفیگ‌های کاربر</h2><label>لینک اشتراک (Subscription)</label>${lk(d.sub)}<div id="qrbox"></div>
- <label>کانفیگ‌های تکی</label>${d.links.map(l=>`<div class="mu" style="margin-top:8px">${esc(l.name)} · ${cn(l.core)}</div>${lk(l.link)}`).join('')||'<div class="empty">اینباند فعالی وجود ندارد</div>'}
+ <label>کانفیگ‌های تکی</label>${d.links.map(l=>`<div class="mu" style="margin-top:8px">${esc(l.name)}</div>${lk(l.link)}`).join('')||'<div class="empty">اینباند فعالی وجود ندارد</div>'}
  <div class="foot"><button class="btn" onclick="dlg()">بستن</button></div>`);qr(d.sub)}
 const lk=t=>`<div class="lk"><span class="mono">${esc(t)}</span><button class="btn sm" onclick="cp(this)" data-t="${esc(t)}">کپی</button><button class="btn sm" onclick="qr(this.previousElementSibling.dataset.t)">QR</button></div>`;
 const cp=b=>{navigator.clipboard.writeText(b.dataset.t).then(()=>toast('کپی شد'))};
@@ -289,7 +287,7 @@ function qr(t){const b=$('#qrbox');if(!b)return;if(!window.qrcode){b.innerHTML='
 
 async function inb(){const is=await api('GET','/inbounds');
  $('#main').innerHTML=head('اینباندها','ورودی‌ها خودکار ساخته شده‌اند؛ هر مسیر WebSocket روی دامنه‌ی Railway به هسته‌ی مربوط می‌رسد','<button class="btn pri" onclick="inbForm()">+ اینباند جدید</button>')+
- `<div class="box"><table><tr><th>نام</th><th>هسته</th><th>پروتکل</th><th>مسیر</th><th>ترافیک</th><th></th></tr>`+is.map(i=>`<tr><td><b>${esc(i.name)}</b></td><td>${cn(i.core)}</td><td>${i.protocol.toUpperCase()} · WS · TLS</td>
+ `<div class="box"><table><tr><th>نام</th><th>پروتکل</th><th>مسیر</th><th>ترافیک</th><th></th></tr>`+is.map(i=>`<tr><td><b>${esc(i.name)}</b></td><td>${i.protocol.toUpperCase()} · WS · TLS</td>
  <td class="mono">${esc(i.path)}</td><td>${fmt(i.bytes)}</td>
  <td><div class="row"><button class="btn sm pri" onclick="renI('${i.id}')">تغییر نام</button><button class="btn sm" onclick="togI('${i.id}',${!i.enabled})">${i.enabled?'غیرفعال':'فعال'}</button><button class="btn sm dn" onclick="delI('${i.id}')">حذف</button></div></td></tr>`).join('')+'</table></div>'}
 function inbForm(){dlg(`<h2>اینباند جدید</h2><label>نام</label><input id="f1" placeholder="مثلاً Xray VLESS 2">
@@ -316,11 +314,6 @@ async function restart(k){await api('POST','/cores/'+k+'/restart',{});toast('ا�
 const pwForm=(pre)=>`<label>رمز فعلی</label><input id="pc" type="password" dir="ltr" autocomplete="current-password" ${pre?'value="admin"':''}>
  <label>نام کاربری جدید (اختیاری)</label><input id="p1" dir="ltr" autocomplete="username">
  <div class="two"><div><label>رمز جدید (حداقل ۶ کاراکتر)</label><input id="p2" type="password" dir="ltr" autocomplete="new-password"></div><div><label>تکرار رمز جدید</label><input id="p3" type="password" dir="ltr" autocomplete="new-password"></div></div><p class="derr"></p>`;
-async function set(){const s=await api('GET','/settings');
- $('#main').innerHTML=head('تنظیمات','آدرس اتصال و حساب مدیر')+`<div class="card"><h3>آدرس اتصال</h3>
- <label>دامنه‌ی عمومی (خالی = خودکار از Railway)</label><input id="s1" dir="ltr" value="${esc(s.publicHost)}" placeholder="example.up.railway.app">
- <label>آدرس اتصال کلاینت / IP تمیز (اختیاری؛ SNI و Host همان دامنه می‌ماند)</label><input id="s2" dir="ltr" value="${esc(s.connectAddress)}">
- <div class="foot"><button class="btn pri" onclick="saveS()">ذخیره</button></div></div>
  <div class="card"><h3>تغییر رمز و نام کاربری مدیر</h3>${pwForm()}<div class="foot"><button class="btn pri" onclick="savePw()">تغییر رمز</button></div></div>`}
 async function saveS(){await api('PUT','/settings',{publicHost:$('#s1').value,connectAddress:$('#s2').value});toast('ذخیره شد')}
 async function savePw(){const a=$('#p2').value,err=m=>{toast(m);document.querySelectorAll('dialog[open] .derr').forEach(e=>e.textContent=m)};
